@@ -61,7 +61,7 @@ sh 'ls'
                     image_name = "localhost:5000/rowanf/orders"
                     dockerImage =  docker.build image_name
                     sh 'docker rm -f portfolio'
-         sh """docker run -d  --restart=unless-stopped --name portfolio  -p 11000:50000 -e SPRING_DATASOURCE_URL=${env.dburl}   -e SPRING_DATASOURCE_USERNAME=postgres   -e SPRING_DATASOURCE_PASSWORD=${MY_CREDS_PSW} -e SPRING_MAIL_USERNAME=${env.gmail}  -e SPRING_MAIL_PASSWORD=${MY_CREDS_PSW} -e MYEMAIL=${env.myemail} -e MYPASSWORD=${MY_NORMAL_CREDS_PSW} -e MYMAIL=${env.mymail} localhost:5000/rowanf/orders"""
+         sh """docker run -d  --restart=unless-stopped --name portfolio  -p 10150:50000 -e SPRING_DATASOURCE_URL=${env.dburl}   -e SPRING_DATASOURCE_USERNAME=postgres   -e SPRING_DATASOURCE_PASSWORD=${MY_CREDS_PSW} -e SPRING_MAIL_USERNAME=${env.gmail}  -e SPRING_MAIL_PASSWORD=${MY_CREDS_PSW} -e MYEMAIL=${env.myemail} -e MYPASSWORD=${MY_NORMAL_CREDS_PSW} -e MYMAIL=${env.mymail} localhost:5000/rowanf/orders"""
 
                 }
             }
