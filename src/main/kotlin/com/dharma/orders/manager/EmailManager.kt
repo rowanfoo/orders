@@ -40,7 +40,45 @@ class EmailManager {
     @Autowired
     lateinit var sellManager: SellManager
 
+    /*
+    This is to filter day trades.. shouldnt go into portfolio
+     */
+    private fun checkdaytrade(ord: List<Orders>): List<Orders> {
+        var codes = ord.groupBy { it.code }
+        var stk = arrayListOf<Orders>()
+        codes.keys.forEach {
+            var list = codes[it]
+            if (list!!.groupBy { it.status }.containsKey("buy") && list.groupBy { it.status }.containsKey("sell")) {
+
+//                var buy = list.groupBy { it.status }["buy"]!!.sumBy { it.quantity }
+//                var sell = list.groupBy { it.status }["sell"]!!.sumBy { it.quantity }
+
+                var buy = list.groupBy { it.status }["buy"]
+                var sell = list.groupBy { it.status }["sell"]
+
+                var buyq = buy!!.sumBy { it.quantity }
+                var sellq = sell!!.sumBy { it.quantity }
+
+                if ((buyq - sellq) == 0) {
+                    //dont add into portfolio , just add to orders
+                    buy.forEach {
+                        processOrder(ordersRepo, it)
+                    }
+                    sell.forEach {
+                        processOrder(ordersRepo, it)
+                    }
+                } else {
+                    stk.addAll(list)
+                }
+            } else {
+                stk.addAll(list)
+            }
+        }
+        return stk
+    }
+
     fun run() {
+        println("-----------EMAIL--MANAGER--------RUN")
         var folder = emailService.folder()
 
         //Nab
@@ -53,6 +91,8 @@ class EmailManager {
         )
         var z = read(msg, Source.NAB)
         println("----MSGS---NAB-- SIZE-${msg.size}----")
+
+        z = checkdaytrade(z)
 
         z.sortedBy { it.status }.forEach {
             saveOrders(it)
@@ -91,23 +131,28 @@ class EmailManager {
 ///////// this is done for , anz partially transacted order , want to group all transacted with same orderid
             //eg buy 5k ...ANZ === anz will buy 2,500 then another 2500 transactions.
         }
-
+//        anz = checkdaytrade(anz)
+        var anz1 = checkdaytrade(anz)
 //// process buy order first then sell
-        anz.sortedBy { it.status }.forEach {
+        anz1.sortedBy { it.status }.forEach {
             saveOrders(it)
         }
 
 
-        if (anz.isNotEmpty() || z.isNotEmpty()) {
+        if (anz1.isNotEmpty() || z.isNotEmpty()) {
             var port = portfolioService.getAllAverage()
 
             var tot = port.sumByDouble { it.quantity * it.price }
-            var invested = percentformat(tot / 400000)
+            var invested = percentformat((tot / 400000) * 100)
             var free = percentformat(100 - invested.toDouble())
-            var s = "After today transaction , Portfolio is \n Invested: $invested  \n FREE :$free"
+            var s = "After today transaction , Portfolio is \n Invested: $invested  %\n FREE :$free %"
             emailService.sendSimpleMessage("Portfolio changes due to transactions:", s)
 
         }
+
+        //Invested: 0.582
+        //    FREE :99.418
+
 
         folder.close(true)
     }
