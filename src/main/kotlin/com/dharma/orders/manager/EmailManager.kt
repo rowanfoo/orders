@@ -1,6 +1,7 @@
 package com.dharma.orders.manager
 
 import com.dhamma.pesistence.entity.data.Orders
+import com.dhamma.pesistence.entity.data.QOrders
 import com.dhamma.pesistence.entity.data.type.Source
 import com.dhamma.pesistence.entity.repo.OrdersRepo
 import com.dhamma.pesistence.entity.repo.PortfolioRepo
@@ -11,6 +12,7 @@ import com.dharma.orders.service.SellService
 import org.apache.commons.mail.util.MimeMessageParser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 import java.util.*
 import javax.mail.Message
 import javax.mail.internet.MimeMessage
@@ -145,7 +147,15 @@ class EmailManager {
             var tot = port.sumByDouble { it.quantity * it.price }
             var invested = percentformat((tot / 400000) * 100)
             var free = percentformat(100 - invested.toDouble())
-            var s = "After today transaction , Portfolio is \n Invested: $invested  %\n FREE :$free %"
+            var z = ordersRepo.findAll(QOrders.orders.date.eq(LocalDate.now()))
+            var trans = ""
+            z.forEach {
+                trans += "${it.code} : ${it.status}  for  ${it.quantity}  =  ${it.price}$  = total of ${it.price * it.quantity}    \n"
+            }
+
+            var s = "After today transaction , Portfolio is \n Invested: $invested  %\n FREE :$free  \n \n $trans%"
+
+
             emailService.sendSimpleMessage("Portfolio changes due to transactions:", s)
 
         }
