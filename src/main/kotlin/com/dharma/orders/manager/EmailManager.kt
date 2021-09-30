@@ -150,7 +150,7 @@ class EmailManager {
             var z = ordersRepo.findAll(QOrders.orders.date.eq(LocalDate.now()))
             var trans = ""
             z.forEach {
-                trans += "${it.code} : ${it.status}  for  ${it.quantity}  =  ${it.price}$  = total of ${it.price * it.quantity}    \n"
+                trans += "${it.code} : <${it.status}>  for  ${it.quantity}  =  ${it.price}$  = total of $ ${it.price * it.quantity}    \n"
             }
 
             var s = "After today transaction , Portfolio is \n Invested: $invested  %\n FREE :$free  \n \n $trans%"
