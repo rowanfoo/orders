@@ -83,16 +83,29 @@ class EmailManager {
         println("-----------EMAIL--MANAGER--------RUN")
         var folder = emailService.folder()
 
+// maybe this email storage time diff from current time
+        val cal = Calendar.getInstance()
+        cal[Calendar.DAY_OF_MONTH] = cal[Calendar.DAY_OF_MONTH] - 1
+        cal[Calendar.HOUR_OF_DAY] = 6
+        cal[Calendar.MINUTE] = 30
+        val mydate = cal.time
+
+        println("find email date  ----- $mydate  ")
         //Nab
         var msg = emailService.messages(
             folder,
             AndTerm(
-                ReceivedDateTerm(ComparisonTerm.EQ, Date()),
+                ReceivedDateTerm(ComparisonTerm.EQ, mydate),
                 SubjectTerm("nabtrade confirmation")
             )
         )
-        var z = read(msg, Source.NAB)
+
+
         println("----MSGS---NAB-- SIZE-${msg.size}----")
+        msg.forEach {
+            println("${it.subject}  ----- ${it.receivedDate}  ")
+        }
+        var z = read(msg, Source.NAB)
 
         z = checkdaytrade(z)
 
@@ -159,11 +172,6 @@ class EmailManager {
             emailService.sendSimpleMessage("Portfolio changes due to transactions:", s)
 
         }
-
-        //Invested: 0.582
-        //    FREE :99.418
-
-
         folder.close(true)
     }
 
@@ -243,7 +251,7 @@ portfolio  - position qty
     }
 
 
-    //        //      var messages = folder.getMessages()
+//        //      var messages = folder.getMessages()
 //
 ////        val search: SearchTerm = SubjectTerm(keyword)
 ////        var messages = folder.search(SubjectTerm("nabtrade"))
