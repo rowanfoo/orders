@@ -22,6 +22,7 @@ fun toOrder(data: List<String>, source: Source) =
 //}
 
 fun processOrder(ordersRepo: OrdersRepo, ord: Orders) {
+    println("-------SAVE   ORDER--------${ord}")
     ordersRepo.save(ord)
 }
 
@@ -37,3 +38,9 @@ fun getAverageBuyPricePortFolio(z: List<Portfolio>): Double {
     return Math.round((sum / total) * 1000.0) / 1000.0
 }
 
+
+fun getAverageBuyPriceOrders(z: List<Orders>): Double {
+    var sum = z.sumByDouble { it.price * it.quantity }
+    var total = z.sumBy { it.quantity }
+    return Math.round((sum / total) * 1000.0) / 1000.0
+}
