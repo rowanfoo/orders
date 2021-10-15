@@ -85,9 +85,9 @@ class EmailManager {
 
 // maybe this email storage time diff from current time
         val cal = Calendar.getInstance()
-        cal[Calendar.DAY_OF_MONTH] = cal[Calendar.DAY_OF_MONTH] - 1
-        cal[Calendar.HOUR_OF_DAY] = 6
-        cal[Calendar.MINUTE] = 30
+        //   cal[Calendar.DAY_OF_MONTH] = cal[Calendar.DAY_OF_MONTH]
+        cal[Calendar.HOUR_OF_DAY] = 1
+        cal[Calendar.MINUTE] = 0
         val mydate = cal.time
 
         println("find email date  ----- $mydate  ")
@@ -103,10 +103,9 @@ class EmailManager {
 
         println("----MSGS---NAB-- SIZE-${msg.size}----")
         msg.forEach {
-            println("${it.subject}  ----- ${it.receivedDate}  ")
+            println("------MSGS---NAB---${it.subject}  ----- ${it.receivedDate}  ")
         }
         var z = read(msg, Source.NAB)
-
         z = checkdaytrade(z)
 
         z.sortedBy { it.status }.forEach {
