@@ -20,7 +20,8 @@ class PriceRules {
         var z = priceService.price(list)
         var list = mutableListOf<RulesDTO>()
         z.keys.forEach {
-            if (z[it]!!.changepercent != 0.0 && z[it]!!.changepercent < -0.05) {
+            if (z[it]!!.changepercent != 0.0 && z[it]!!.changepercent < -5) {
+
                 list.add(
                     RulesDTO(
                         "Warn -PRICE- Price fall",
