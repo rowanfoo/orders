@@ -20,6 +20,8 @@ class RulesManager {
     @Autowired
     lateinit var emailService: EmailService
 
+    @Autowired
+    lateinit var newRules: NewRules
 
 
     fun run() {
@@ -31,20 +33,26 @@ class RulesManager {
         var s = priceRules.pricestoploss(z)
 
 
-       var u = portfolioRules.lastbuy()
+        var u = portfolioRules.lastbuy()
         var v = portfolioRules.total(z)
 
         println(s)
+
+
+        var x6 = newRules.newsrules(z)
+
+
         var a = arrayListOf<RulesDTO>()
         a.addAll(t)
         a.addAll(s)
         a.addAll(t)
         a.addAll(u)
         a.addAll(v)
+        a.addAll(x6)
 
 
         for (rulesDTO in a) {
-            emailService.sendSimpleMessage(rulesDTO.warn , rulesDTO.msg)
+            emailService.sendSimpleMessage(rulesDTO.warn, rulesDTO.msg)
         }
 
     }
