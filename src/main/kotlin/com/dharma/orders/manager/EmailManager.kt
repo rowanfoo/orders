@@ -13,6 +13,7 @@ import org.apache.commons.mail.util.MimeMessageParser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 import javax.mail.Message
 import javax.mail.internet.MimeMessage
@@ -85,8 +86,12 @@ class EmailManager {
 
 // maybe this email storage time diff from current time
         val cal = Calendar.getInstance()
-        //   cal[Calendar.DAY_OF_MONTH] = cal[Calendar.DAY_OF_MONTH]
-        cal[Calendar.HOUR_OF_DAY] = 1
+//           cal[Calendar.DAY_OF_MONTH] = cal[Calendar.DAY_OF_MONTH]
+        //   cal[Calendar.DAY_OF_MONTH] = Calendar.DAY_OF_MONTH + 15
+        //println("day of month  ----- ${Calendar.DAY_OF_MONTH}  ")
+        //println("day of month  ----- ${Calendar.DAY_OF_YEAR}  ")
+        cal[Calendar.DAY_OF_MONTH] = cal[Calendar.DAY_OF_MONTH] - 1
+        cal[Calendar.HOUR_OF_DAY] = 10
         cal[Calendar.MINUTE] = 0
         val mydate = cal.time
 
@@ -95,16 +100,32 @@ class EmailManager {
         var msg = emailService.messages(
             folder,
             AndTerm(
-                ReceivedDateTerm(ComparisonTerm.EQ, mydate),
+                ReceivedDateTerm(ComparisonTerm.GE, mydate),
                 SubjectTerm("nabtrade confirmation")
             )
-        )
+        ).filter {
+            it.receivedDate.toInstant().atZone(ZoneId.systemDefault())
+                .toLocalDate().dayOfMonth == LocalDate.now().dayOfMonth
+        }.toTypedArray()
+
+//
+//        var msg = emailService.messages(
+//            folder,
+//            AndTerm(
+//                ReceivedDateTerm(ComparisonTerm.GE, mydate),
+//                SubjectTerm("nabtrade confirmation")
+//            )
+//        )
 
 
         println("----MSGS---NAB-- SIZE-${msg.size}----")
         msg.forEach {
+//            println(
+//                "------ ${it.receivedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().dayOfMonth}")
+
             println("------MSGS---NAB---${it.subject}  ----- ${it.receivedDate}  ")
         }
+
         var z = read(msg, Source.NAB)
         z = checkdaytrade(z)
 
@@ -112,14 +133,19 @@ class EmailManager {
             saveOrders(it)
         }
 
-        var t = AndTerm(ReceivedDateTerm(ComparisonTerm.EQ, Date()), SubjectTerm("3116872"))
+        var t = AndTerm(ReceivedDateTerm(ComparisonTerm.GE, mydate), SubjectTerm("3116872"))
+        //  var t = ReceivedDateTerm(ComparisonTerm.EQ, mydate)
         t = AndTerm(t, SubjectTerm("filled"))
-        msg = emailService.messages(folder, t)
+        msg = emailService.messages(folder, t).filter {
+            it.receivedDate.toInstant().atZone(ZoneId.systemDefault())
+                .toLocalDate().dayOfMonth == LocalDate.now().dayOfMonth
+        }.toTypedArray()
 
         println("----MSGS---ANZ-- SIZE-${msg.size}----")
         msg.forEach {
 
-            println("----MSG---${it.subject}")
+            println("----MSG--ANZ-${it.subject}---------- ${it.receivedDate}-----${it.getHeader("Date")[0]} ")
+
         }
         println("----MSG--FILTERED---${msg.filter { it.subject.indexOf("filled") > 0 }.toTypedArray().size}")
 
@@ -166,22 +192,9 @@ class EmailManager {
             }
 
             var s = "After today transaction , Portfolio is \n Invested: $invested  %\n FREE :$free  \n \n $trans%"
-
-
             emailService.sendSimpleMessage("Portfolio changes due to transactions:", s)
-
         }
         folder.close(true)
-    }
-
-
-    private fun isorderfill(ord: List<Orders>): Orders? {
-        //      println("-----------------isorderfill------------$ord")
-        ord.forEach {
-            //   println("-----------------isorderfill-----irder-------${it.orderstatus}")
-            if (it.orderstatus.equals("fill")) return it
-        }
-        return null
     }
 
     fun read(messages: Array<Message>, source: Source): List<Orders> {
@@ -222,6 +235,15 @@ class EmailManager {
 
         return s
 //        return list
+    }
+
+    private fun isorderfill(ord: List<Orders>): Orders? {
+        //      println("-----------------isorderfill------------$ord")
+        ord.forEach {
+            //   println("-----------------isorderfill-----irder-------${it.orderstatus}")
+            if (it.orderstatus.equals("fill")) return it
+        }
+        return null
     }
 
 /*
