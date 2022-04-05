@@ -26,7 +26,8 @@ class OrdersApplication : CommandLineRunner {
 
 
     override fun run(vararg args: String?) {
-     //     emailManager.run()
+        println("---------RUN------NOW -----")
+        //  emailManager.run()
 //        rulesManager.run()
     }
 
@@ -36,7 +37,7 @@ class OrdersApplication : CommandLineRunner {
         emailManager.run()
     }
 
-    @Scheduled(cron = "0 3 15 ? * MON-FRI")
+    @Scheduled(cron = "0 45 15 ? * MON-FRI")
     fun runporttest() {
         println("---------RUN------${LocalDateTime.now()}-----")
         rulesManager.run()
