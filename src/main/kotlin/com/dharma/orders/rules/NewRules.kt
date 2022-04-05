@@ -22,15 +22,17 @@ class NewRules {
         var list = mutableListOf<RulesDTO>()
 
         z.keys.forEach {
+            var code = it
+            var message = ""
             z[it]!!.forEach {
-                list.add(
-                    RulesDTO(
-                        "News ",
-                        "CODE: , ${it.code}  , ${it.title}"
-                    )
-                )
+                message += "${it.title} \n"
             }
-
+            list.add(
+                RulesDTO(
+                    "News - ${code} ",
+                    "CODE: , ${code}  , \n ${message}"
+                )
+            )
 
         }
         println("---------NewsRules----------$list")
