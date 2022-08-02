@@ -35,27 +35,40 @@ class RulesManager {
 
         var u = portfolioRules.lastbuy()
         var v = portfolioRules.total(z)
-
+        sendMail(v)
         println(s)
 
 
         var x6 = newRules.newsrules(z)
+        sendMail(x6)
 
-
-        var a = arrayListOf<RulesDTO>()
-        a.addAll(t)
-        a.addAll(s)
-        a.addAll(t)
-        a.addAll(u)
-        a.addAll(v)
-        a.addAll(x6)
-
-
-        for (rulesDTO in a) {
-            emailService.sendSimpleMessage(rulesDTO.warn, rulesDTO.msg)
-        }
+//        var a = arrayListOf<RulesDTO>()
+//        a.addAll(t)
+//        a.addAll(s)
+//        a.addAll(t)
+//        a.addAll(u)
+//        a.addAll(v)
+//        a.addAll(x6)
+//
+//        var msg = ""
+//        for (rulesDTO in a) {
+//            msg.plus("${rulesDTO.msg} . \n" )
+//
+//        }
+//        emailService.sendSimpleMessage(rulesDTO.warn, rulesDTO.msg)
 
     }
 
+    private fun sendMail(list:List<RulesDTO>){
+        var msg = ""
+        for (rulesDTO in list) {
+            msg.plus("${rulesDTO.msg} . \n" )
+
+        }
+        if(msg.isNotEmpty()){
+            emailService.sendSimpleMessage(list[0].warn, msg)
+        }
+
+    }
 
 }
