@@ -9,8 +9,14 @@ import java.time.LocalDate
 
 
 fun toOrder(data: List<String>, source: Source) =
-    Orders.builder().code(data[3]).date(LocalDate.now()).orderid(data[1]).quantity(data[2].toInt())
-        .price(data[4].replace("$", "").toDouble()).source(source).status(data[0]).orderstatus(data[5]).build()
+    Orders.builder().code(data[3])
+        .date(LocalDate.now())
+        .orderid(data[1])
+        .quantity(data[2].toInt())
+        .price(data[4].replace("$", "").toDouble())
+        .source(source).status(data[0])
+        .orderstatus(data[5])
+        .build()
 
 
 //fun processSellOrder(portfolioService: PortfolioService, sellService: SellService, ord: Orders) {
