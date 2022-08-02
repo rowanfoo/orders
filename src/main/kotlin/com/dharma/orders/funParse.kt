@@ -95,7 +95,7 @@ private fun getoutput(tmp: String): List<String> {
     var code = z[7]
     var price = z[9]
 //      println("-NAB--$status------$ordid-------$code-----$sum----$price")
-
+    //println("-----NAB-----$z")
     return listOf(z[2].trim().toLowerCase(), z[4].trim(), sum, z[7].replace("ASX", "AX"), z[9].replace("$", ""), "fill")
 }
 
@@ -111,7 +111,8 @@ private fun getoutputanz(tmp: String): List<String> {
 //    var price = z[9]
 //    // println("-ANZ--$status------$ordid-------$code-----$sum----$price")
 //    return listOf(z[5].trim().toLowerCase(), z[40].trim(), sum, code, z[9])
-
+    //println("-----ANZ-----$z")
+    //println("-----ANZ>>>>>>-----${z[16]}")
     var status = z[70]
     var ordid = z[67]
     // println("-ANZ--ordid -- $ordid")
@@ -123,7 +124,7 @@ private fun getoutputanz(tmp: String): List<String> {
     var sum = z[87].replace(",", "")
     var code = "${z[74]}.AX"
     var price = z[90]
-    println("-ANZ--$status------$ordid-------$code-----$sum----$price")
+    // println("-ANZ--$status------$ordid-------$code-----$sum----$price")
     return listOf(status.trim().toLowerCase(), ordid.trim(), sum, code, price, "partial")
 }
 
@@ -151,5 +152,6 @@ private fun getoutputanzfill(tmp: String): List<String> {
 
     var price = z[9]
     println("-ANZ---FILL----$status------$ordid-------$code-----$sum----$price")
+    if (price.toDoubleOrNull() == null) return listOf()
     return listOf(status.trim().toLowerCase(), ordid.trim(), sum, code, price, "fill")
 }
