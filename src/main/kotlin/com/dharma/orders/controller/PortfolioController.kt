@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
+import kotlin.streams.toList
 
 @CrossOrigin
 @RestController
@@ -32,4 +33,14 @@ class PortfolioController {
         return portfolioService.getAllAverage()
     }
 
+    @GetMapping("/portfolio/codes")
+    fun getCodes(): List<String> {
+        return portfolioRepo.findAll().stream().map {
+            it.code
+        }.distinct().toList()
+
+//        var s = portfolioRepo.findAll()
+//        println("-----cat-----$s--")
+//        return s
+    }
 }
