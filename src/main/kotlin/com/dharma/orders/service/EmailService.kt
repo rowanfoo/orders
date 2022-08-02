@@ -1,10 +1,11 @@
 package com.dharma.orders.service
 
 
+import com.sun.deploy.net.HttpResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mail.SimpleMailMessage
-import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 import javax.mail.Folder
 import javax.mail.Store
 import javax.mail.search.SearchTerm
@@ -62,21 +63,35 @@ class EmailService {
 //    }
 
 
-    fun close() {
+//    fun close() {
+//
+//    }
 
-    }
-
-    @Autowired
-    lateinit var emailSender: JavaMailSender
-
+//    @Autowired
+//    lateinit var emailSender: JavaMailSender
+//
+//    fun sendSimpleMessage(subject: String, text: String) {
+//
+//        println("---------sendSimpleMessage------${LocalDateTime.now()}-----")
+//
+//        var message = SimpleMailMessage()
+//        message.setTo("rowanfoo@gmail.com");
+//        message.setSubject(subject);
+//        message.setText(text);
+//        println("-------send message--")
+//        emailSender.send(message);
+//        println("-------send message----done-")
+//
+//    }
     fun sendSimpleMessage(subject: String, text: String) {
-        var message = SimpleMailMessage()
-        message.setTo("rowanfoo@gmail.com");
-        message.setSubject(subject);
-        message.setText(text);
-        println("-------send message--")
-        emailSender.send(message);
-        println("-------send message----done-")
+
+        println("---------sendSimpleMessage------${LocalDateTime.now()}-----")
+    
+
+//    val body = Unirest.post("http://localhost:8080/email/rowanfoo@gmail.com/${subject}")
+//        .body(text)
+//        .asString()
+//    System.out.println(body.text)
 
     }
 
