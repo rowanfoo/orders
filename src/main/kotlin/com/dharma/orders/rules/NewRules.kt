@@ -29,7 +29,7 @@ class NewRules {
             }
             list.add(
                 RulesDTO(
-                    "News - ${code} ",
+                    "Portfolio News ",
                     "CODE: , ${code}  , \n ${message}"
                 )
             )
