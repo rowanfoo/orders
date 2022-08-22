@@ -29,7 +29,7 @@ class RulesManager {
         var z = portfolioService.getAllBuy()
 
         var t = priceRules.pricefall(z)
-        println(t)
+
         var s = priceRules.pricestoploss(z)
 
 
@@ -62,13 +62,11 @@ class RulesManager {
     private fun sendMail(list:List<RulesDTO>){
         var msg = ""
         for (rulesDTO in list) {
-            msg.plus("${rulesDTO.msg} . \n" )
+            msg = msg.plus("${rulesDTO.msg} . \n" )
 
         }
         if(msg.isNotEmpty()){
             emailService.sendSimpleMessage(list[0].warn, msg)
         }
-
     }
-
 }
