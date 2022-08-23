@@ -1,9 +1,10 @@
 package com.dharma.orders.service
 
 
+import com.mashape.unirest.http.Unirest
 import com.sun.deploy.net.HttpResponse
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.mail.SimpleMailMessage
+
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import javax.mail.Folder
@@ -86,12 +87,12 @@ class EmailService {
     fun sendSimpleMessage(subject: String, text: String) {
 
         println("---------sendSimpleMessage------${LocalDateTime.now()}-----")
-    
+    println("---------sendSimpleMessage---msg---${text}-----")
 
-//    val body = Unirest.post("http://localhost:8080/email/rowanfoo@gmail.com/${subject}")
-//        .body(text)
-//        .asString()
-//    System.out.println(body.text)
+    val body = Unirest.post("http://192.168.68.10:20000/email/rowanfoo@gmail.com/${subject}")
+        .body(text)
+        .asString()
+    System.out.println(body.body)
 
     }
 
