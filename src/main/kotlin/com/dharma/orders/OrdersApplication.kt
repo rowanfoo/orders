@@ -27,17 +27,17 @@ class OrdersApplication : CommandLineRunner {
 
     override fun run(vararg args: String?) {
         println("---------RUN------NOW -----")
-        //  emailManager.run()
-//        rulesManager.run()
+    //     emailManager.run()
+       // rulesManager.run()
     }
 
-    @Scheduled(cron = "0 15 15 ? * MON-FRI")
+    @Scheduled(cron = "0 15 14 ? * MON-FRI")
     fun reportCurrentTime() {
         println("---------RUN------${LocalDateTime.now()}-----")
         emailManager.run()
     }
 
-    @Scheduled(cron = "0 45 15 ? * MON-FRI")
+//    @Scheduled(cron = "0 45 16 ? * MON-FRI")
     fun runporttest() {
         println("---------RUN------${LocalDateTime.now()}-----")
         rulesManager.run()
