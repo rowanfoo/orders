@@ -2,6 +2,7 @@ package com.dharma.orders.controller
 
 import com.dhamma.pesistence.entity.data.Portfolio
 import com.dhamma.pesistence.entity.repo.PortfolioRepo
+import com.dharma.orders.rules.RulesManager
 import com.dharma.orders.service.PortfolioService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -14,10 +15,10 @@ import kotlin.streams.toList
 class PortfolioController {
     @Autowired
     lateinit var portfolioRepo: PortfolioRepo
-
-
     @Autowired
     lateinit var portfolioService: PortfolioService
+    @Autowired
+    lateinit var rulesManager: RulesManager
 
 
     @GetMapping("/portfolio/items")
@@ -43,4 +44,12 @@ class PortfolioController {
 //        println("-----cat-----$s--")
 //        return s
     }
+
+
+    @GetMapping("/portfolio/rulesmanager")
+    fun rulesmanager(){
+        rulesManager.run()
+    }
+
+
 }
